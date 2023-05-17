@@ -27,7 +27,6 @@ public class RotateBigCube : MonoBehaviour
         
     }
 
-
     void Drag()
     {
 
