@@ -7,6 +7,8 @@ public class RotateBigCube : MonoBehaviour
     Vector2 _firstPressPos;
     Vector2 _secondPressPos;
     Vector2 _currentSwipe;
+    Vector3 _previousMousePosition;
+    Vector3 _mouseDelta;
 
 
     public GameObject _target;
@@ -21,13 +23,33 @@ public class RotateBigCube : MonoBehaviour
     void Update()
     {
         Swipe();
+        Drag();
+        
+    }
 
-        //automatically move to the target position
-        if (this.transform.rotation != _target.transform.rotation)
+
+    void Drag()
+    {
+
+        if (Input.GetMouseButton(1))
         {
-            var step = _speed * Time.deltaTime;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, _target.transform.rotation, step);
+            // While right mouse is held down, the cube can be move around its central
+            _mouseDelta = Input.mousePosition - _previousMousePosition;
+            _mouseDelta *= .1f; //reduction of rotation speed
+
+            transform.rotation = Quaternion.Euler(_mouseDelta.y, -_mouseDelta.x, 0f) * transform.rotation;
         }
+        else
+        {
+            //automatically move to the target position
+            if (this.transform.rotation != _target.transform.rotation)
+            {
+                var step = _speed * Time.deltaTime;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, _target.transform.rotation, step);
+            }
+        }
+
+        _previousMousePosition = Input.mousePosition;
     }
 
     
